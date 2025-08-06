@@ -1,0 +1,20 @@
+---
+layout: null
+permalink: /posts.json
+---
+[
+{% for post in site.posts %}
+  {
+    "title": {{ post.title | jsonify }},
+    "url": {{ post.url | jsonify }},
+    "date": {{ post.date | date_to_xmlschema | jsonify }},
+    "categories": {{ post.categories | jsonify }},
+    "tags": {{ post.tags | jsonify }},
+    "excerpt": {{ post.excerpt | strip_newlines | jsonify }},
+    "author": {{ post.author | default: site.author.name | jsonify }},
+    "reading_time": {{ post.content | number_of_words | divided_by: 200 | ceil }},
+    "word_count": {{ post.content | number_of_words }},
+    "draft": {{ post.draft | default: false | jsonify }}
+  }{% if forloop.last == false %},{% endif %}
+{% endfor %}
+]

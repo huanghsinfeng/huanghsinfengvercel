@@ -1,0 +1,27 @@
+image: ruby:3.1
+
+pipelines:
+  default:
+    - step:
+        name: Build Jekyll Site
+        caches:
+          - bundler
+        script:
+          - gem install bundler
+          - bundle install
+          - bundle exec jekyll build  # 不指定 -d，預設輸出 _site
+        artifacts:
+          - _site/**
+
+    - step:
+        name: Deploy to Bitbucket Pages
+        deployment: production
+        script:
+          - pipe: atlassian/bitbucket-upload-file:0.5.0
+            variables:
+              FILENAME: "_site"
+              TARGET: "."
+
+definitions:
+  caches:
+    bundler: vendor/bundle
